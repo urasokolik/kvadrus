@@ -1712,7 +1712,7 @@
           </div>
 
           <div class="hero-actions-row">
-            <button class="btn btn-primary" onclick="openModal('Бронирование квадроцикла КВАДРУС')">
+            <button class="btn btn-primary" onclick="openModal('Расчет стоимости и доставки КВАДРУС')">
               Рассчитать стоимость и доставку
             </button>
             <a href="https://www.avito.ru/volgograd/mototsikly_i_mototehnika/raptor_8_2025_100_km_7230370652" target="_blank" rel="noopener" class="btn btn-secondary">
@@ -1876,8 +1876,8 @@
             Покупка прогулочного квадроцикла для тяжелой работы оборачивается лопнувшей рамой, заклинившим мотором и простоями. КВАДРУС окупает свою стоимость за первый же рабочий сезон.
           </p>
         </div>
-        <button class="btn btn-secondary" onclick="openModal('Консультация с инженером завода')">
-          Задать вопрос инженеру
+        <button class="btn btn-secondary" onclick="openModal('Консультация по технике и заказу')">
+          Получить консультацию
         </button>
       </div>
     </div>
@@ -2229,9 +2229,9 @@
       <div class="cta-card">
         <div style="text-align: center;">
           <div class="eyebrow">ПРЯМАЯ СВЯЗЬ С ПРОИЗВОДСТВОМ</div>
-          <h2 class="section-title" style="margin-bottom: 8px;">ЗАБРОНИРУЙТЕ КВАДРУС ИЗ БЛИЖАЙШЕЙ ПАРТИИ</h2>
+          <h2 class="section-title" style="margin-bottom: 8px;">ПОЛУЧИТЬ РАСЧЕТ И СПЕЦИФИКАЦИЮ КВАДРУС</h2>
           <p style="color: var(--text-muted); max-width: 580px; margin: 0 auto; line-height: 1.5; font-size: 14px;">
-            Оставьте заявку инженеру завода: зафиксируйте цену, согласуйте рассрочку 0% или рассчитайте попутную доставку до вашего адреса.
+            Оставьте заявку: согласуем персональные условия, рассчитаем попутную доставку до вашего адреса и ответим на все вопросы.
           </p>
         </div>
 
@@ -2271,14 +2271,9 @@
             <input type="text" name="city" class="input-field" placeholder="Например: Волгоград, Москва, Сибирь" required>
           </div>
 
-          <button type="submit" class="btn btn-primary form-btn">
-            🚜 ЗАБРОНИРОВАТЬ ЦЕНУ / РАССРОЧКУ 0%
-          </button>
-        </form>
-
-          <div class="form-col-full" style="margin-top: 6px;">
-            <button type="submit" class="btn btn-primary" style="width: 100%;">
-              Зафиксировать цену и заказать звонок инженера
+          <div style="grid-column: 1 / -1; margin-top: 6px;">
+            <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 16px; padding: 14px;">
+              🚜 ПОЛУЧИТЬ РАСЧЕТ СТОИМОСТИ И ДОСТАВКИ
             </button>
             <div style="text-align: center; font-size: 11px; color: var(--text-muted); margin-top: 8px;">
               Нажимая кнопку, вы соглашаетесь на обработку персональных данных по 152-ФЗ.
@@ -2369,7 +2364,7 @@
       <div class="eyebrow" id="modalSubject">ЗАПРОС СПЕЦИФИКАЦИИ</div>
       <h3 style="font-size: 20px; margin-bottom: 6px;">ОСТАВЬТЕ КОНТАКТЫ</h3>
       <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 16px; line-height: 1.5;">
-        Инженер завода перезвонит в течение 10 минут, ответит на любые технические вопросы и рассчитает точную стоимость доставки до вашего адреса.
+        Мы свяжемся с вами в течение 10 минут, ответим на любые вопросы и рассчитаем точную стоимость доставки до вашего адреса.
       </p>
 
       <form onsubmit="handleModalSubmit(event)" data-title="Всплывающее окно: Запрос КП и рассрочки" style="display: flex; flex-direction: column; gap: 12px;">
@@ -2396,7 +2391,7 @@
 
   <!-- Toast -->
   <div class="toast-banner" id="toast">
-    ЗАЯВКА ПРИНЯТА! Инженер завода свяжется с вами в течение 10 минут.
+    ЗАЯВКА ПРИНЯТА! Мы свяжемся с вами в течение 10 минут.
   </div>
 
   <script>
@@ -2637,7 +2632,7 @@
       const form = e.target;
       const formData = new FormData(form);
       await processLead(formData, form.getAttribute('data-title') || 'Основная форма заявки');
-      showToast('ЗАЯВКА ПРИНЯТА! Перенаправляем в WhatsApp инженера...');
+      showToast('ЗАЯВКА ПРИНЯТА! Перенаправляем в WhatsApp...');
       form.reset();
     }
 
@@ -2647,7 +2642,7 @@
       const formData = new FormData(form);
       await processLead(formData, 'Всплывающее окно: Запрос КП и спецификации');
       closeModal();
-      showToast('ЗАЯВКА ПРИНЯТА! Открываем WhatsApp инженера...');
+      showToast('ЗАЯВКА ПРИНЯТА! Открываем WhatsApp...');
       form.reset();
     }
 
