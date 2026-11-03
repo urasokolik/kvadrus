@@ -519,22 +519,30 @@
   // Physical Canvas-based Image Rotation (Flips real pixels so image fits container 100% naturally without overflow)
   function rotateImageViaCanvas(imgElement, degrees, callback) {
     const image = new Image();
-    image.crossOrigin = 'anonymous';
     image.onload = () => {
-      const canvas = document.createElement('canvas');
-      if (degrees === 90 || degrees === 270) {
-        canvas.width = image.height;
-        canvas.height = image.width;
-      } else {
-        canvas.width = image.width;
-        canvas.height = image.height;
+      try {
+        const canvas = document.createElement('canvas');
+        if (degrees === 90 || degrees === 270) {
+          canvas.width = image.height;
+          canvas.height = image.width;
+        } else {
+          canvas.width = image.width;
+          canvas.height = image.height;
+        }
+        const ctx = canvas.getContext('2d');
+        ctx.translate(canvas.width / 2, canvas.height / 2);
+        ctx.rotate((degrees * Math.PI) / 180);
+        ctx.drawImage(image, -image.width / 2, -image.height / 2);
+        const dataUrl = canvas.toDataURL('image/webp', 0.88);
+        callback(dataUrl);
+      } catch (err) {
+        console.error('Canvas rotate error:', err);
+        // Fallback to CSS transform if canvas fails
+        imgElement.style.transform = 'rotate(' + degrees + 'deg)';
       }
-      const ctx = canvas.getContext('2d');
-      ctx.translate(canvas.width / 2, canvas.height / 2);
-      ctx.rotate((degrees * Math.PI) / 180);
-      ctx.drawImage(image, -image.width / 2, -image.height / 2);
-      const dataUrl = canvas.toDataURL('image/webp', 0.88);
-      callback(dataUrl);
+    };
+    image.onerror = (e) => {
+      console.error('Image load error for canvas rotate:', e);
     };
     image.src = imgElement.src;
   }
