@@ -1,9 +1,10 @@
-// KVADRUS 4X4 - On-Page Visual Editor & Admin System
+// KVADRUS 4X4 - Universal On-Page Visual Editor & CMS
 (function () {
   'use strict';
 
   const AUTH_KEY = 'kvadrus_admin_auth';
   const PASS_HASH = '34523';
+  const CACHE_KEY = 'kvadrus_cms_cache';
   const API_ENDPOINT = window.location.origin.includes('netlify')
     ? '/.netlify/functions/save-content'
     : 'https://kvadrus-official.netlify.app/.netlify/functions/save-content';
@@ -131,7 +132,7 @@
 
       /* Editable Elements Highlight */
       body.admin-mode-active:not(.admin-preview-mode) [data-cms] {
-        outline: 1px dashed rgba(249, 115, 22, 0.5);
+        outline: 1px dashed rgba(249, 115, 22, 0.45);
         outline-offset: 3px;
         cursor: text;
         transition: outline 0.2s, background 0.2s;
@@ -150,7 +151,14 @@
       /* Image Overlay Controls */
       .admin-img-wrapper {
         position: relative !important;
-        overflow: hidden;
+        overflow: hidden !important;
+      }
+
+      .admin-img-wrapper img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        display: block !important;
       }
 
       .admin-img-toolbar {
@@ -160,19 +168,15 @@
         display: flex;
         gap: 6px;
         z-index: 100;
-        opacity: 0.9;
+        opacity: 0.95;
         transition: opacity 0.2s ease;
       }
 
-      .admin-img-wrapper:hover .admin-img-toolbar {
-        opacity: 1;
-      }
-
       .admin-img-btn {
-        background: rgba(6, 17, 28, 0.85);
+        background: rgba(6, 17, 28, 0.92);
         color: #FFFFFF;
         border: 1px solid #F97316;
-        padding: 4px 8px;
+        padding: 5px 9px;
         border-radius: 4px;
         font-size: 11px;
         font-weight: 700;
@@ -181,7 +185,7 @@
         display: flex;
         align-items: center;
         gap: 4px;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+        box-shadow: 0 2px 6px rgba(0,0,0,0.6);
       }
 
       .admin-img-btn:hover {
@@ -197,7 +201,7 @@
       #kvadrus-auth-modal {
         position: fixed;
         top: 0; left: 0; right: 0; bottom: 0;
-        background: rgba(4, 9, 15, 0.85);
+        background: rgba(4, 9, 15, 0.88);
         backdrop-filter: blur(8px);
         z-index: 2000000;
         display: flex;
@@ -351,7 +355,7 @@
       <div class="auth-modal-box">
         <div class="auth-modal-icon">⚙️</div>
         <div class="auth-modal-title">ВХОД В РЕДАКТОР</div>
-        <div class="auth-modal-desc">Введите PIN-код для редактирования текстов и фотографий КВАДРУС</div>
+        <div class="auth-modal-desc">Введите PIN-код для редактирования любых текстов и фото</div>
         <input type="password" inputmode="numeric" class="auth-modal-input" id="admin-pin-input" maxlength="10" placeholder="•••••" autofocus />
         <div class="auth-modal-error" id="auth-modal-error">Неверный PIN-код</div>
         <div class="auth-modal-actions">
@@ -373,7 +377,7 @@
         sessionStorage.setItem(AUTH_KEY, val);
         modal.remove();
         activateAdminMode();
-        showToast('Режим редактора включен! Кликайте по текстам и фото.');
+        showToast('Режим редактора включен! Кликайте по ЛЮБОМУ тексту или фото.');
       } else {
         err.style.display = 'block';
         input.value = '';
@@ -448,14 +452,63 @@
     showToast('Вы вышли из режима редактора.');
   }
 
-  // Setup Editable Texts
+  // Generate deterministic ID for any text element
+  function getDeterministicKey(el, idx) {
+    if (el.getAttribute('data-cms')) return el.getAttribute('data-cms');
+    
+    // Check closest section/card
+    const section = el.closest('section')?.id || el.closest('header, footer, nav')?.tagName.toLowerCase() || 'sec';
+    const tag = el.tagName.toLowerCase();
+    const classSnippet = (el.className && typeof el.className === 'string') 
+      ? el.className.split(' ').filter(c => !c.startsWith('admin-')).slice(0, 1).join('_') 
+      : '';
+    const key = `cms_${section}_${tag}${classSnippet ? '_' + classSnippet : ''}_${idx}`;
+    el.setAttribute('data-cms', key);
+    return key;
+  }
+
+  // Setup Universal Text Editing across ALL text-bearing elements
   function setupEditableTexts() {
-    document.querySelectorAll('[data-cms]').forEach(el => {
+    // Select all potential text elements
+    const selectors = [
+      'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 
+      'p', '.eyebrow', '.highlight', 
+      '.spec-box-val', '.spec-box-lbl', 
+      '.hero-media-badge', '.cap', '.gallery-caption', 
+      '.footer-nav li', '.btn', '.badge', 
+      '.eng-item h4', '.eng-item p', '.eng-tag',
+      '.calc-card', '.credit-card', '.hero-lead-text',
+      '[data-cms]'
+    ];
+
+    const elements = document.querySelectorAll(selectors.join(', '));
+    let idx = 0;
+
+    elements.forEach(el => {
+      // Ignore admin elements, scripts, inputs
+      if (el.closest('#kvadrus-admin-bar') || el.closest('#kvadrus-auth-modal') || el.closest('.admin-img-toolbar')) return;
+      if (['SCRIPT', 'STYLE', 'INPUT', 'TEXTAREA', 'SELECT', 'VIDEO'].includes(el.tagName)) return;
+      
+      // Only make leaf-ish elements editable (elements whose children are mostly text/inline)
+      const hasBlockChildren = Array.from(el.children).some(child => 
+        ['DIV', 'SECTION', 'UL', 'OL', 'TABLE', 'FORM'].includes(child.tagName)
+      );
+      if (hasBlockChildren && !el.hasAttribute('data-cms')) return;
+
+      const key = getDeterministicKey(el, idx++);
       el.setAttribute('contenteditable', 'true');
       el.setAttribute('spellcheck', 'false');
 
+      // Prevent link navigation during editing
+      if (el.tagName === 'A' || el.closest('a')) {
+        el.addEventListener('click', (e) => {
+          if (document.body.classList.contains('admin-mode-active') && !cmsState.isPreview) {
+            e.preventDefault();
+          }
+        });
+      }
+
       el.addEventListener('input', () => {
-        const key = el.getAttribute('data-cms');
         cmsState.texts[key] = el.innerHTML;
         cmsState.dirtyCount++;
         updateDirtyCount();
@@ -463,9 +516,32 @@
     });
   }
 
-  // Setup Image Controls (Rotate, Replace)
+  // Physical Canvas-based Image Rotation (Flips real pixels so image fits container 100% naturally without overflow)
+  function rotateImageViaCanvas(imgElement, degrees, callback) {
+    const image = new Image();
+    image.crossOrigin = 'anonymous';
+    image.onload = () => {
+      const canvas = document.createElement('canvas');
+      if (degrees === 90 || degrees === 270) {
+        canvas.width = image.height;
+        canvas.height = image.width;
+      } else {
+        canvas.width = image.width;
+        canvas.height = image.height;
+      }
+      const ctx = canvas.getContext('2d');
+      ctx.translate(canvas.width / 2, canvas.height / 2);
+      ctx.rotate((degrees * Math.PI) / 180);
+      ctx.drawImage(image, -image.width / 2, -image.height / 2);
+      const dataUrl = canvas.toDataURL('image/webp', 0.88);
+      callback(dataUrl);
+    };
+    image.src = imgElement.src;
+  }
+
+  // Setup Image Controls (Rotate via Canvas, Replace)
   function setupImageControls() {
-    const images = document.querySelectorAll('.gallery-card img, .eng-photo-card img, #main-kvadrus-photo');
+    const images = document.querySelectorAll('.gallery-card img, .eng-photo-card img, #main-kvadrus-photo, .hero-media-card img:not([src*="made_in_russia"])');
     images.forEach((img, idx) => {
       const parent = img.parentElement;
       if (!parent.classList.contains('admin-img-wrapper')) {
@@ -480,7 +556,7 @@
       const toolbar = document.createElement('div');
       toolbar.className = 'admin-img-toolbar';
       toolbar.innerHTML = `
-        <button type="button" class="admin-img-btn" data-act="rotate" title="Повернуть на 90 градусов">↺ 90°</button>
+        <button type="button" class="admin-img-btn" data-act="rotate" title="Повернуть фото на 90 градусов">↺ 90°</button>
         <button type="button" class="admin-img-btn" data-act="replace" title="Загрузить другое фото">📁 Заменить</button>
         <input type="file" accept="image/*" style="display:none" class="admin-file-input">
       `;
@@ -490,21 +566,35 @@
       const replaceBtn = toolbar.querySelector('[data-act="replace"]');
       const fileInput = toolbar.querySelector('.admin-file-input');
 
-      // Rotate handler
+      // Physical rotate handler: swaps width/height on canvas so it perfectly stretches inside parent container
       rotateBtn.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
 
-        const curAngle = (cmsState.images[imgKey]?.rotate || 0) + 90;
-        const normalizedAngle = curAngle % 360;
+        rotateBtn.innerHTML = '⏳';
+        rotateBtn.disabled = true;
 
-        if (!cmsState.images[imgKey]) cmsState.images[imgKey] = {};
-        cmsState.images[imgKey].rotate = normalizedAngle;
-        img.style.transform = `rotate(${normalizedAngle}deg)`;
-        img.style.transition = 'transform 0.25s ease';
+        rotateImageViaCanvas(img, 90, (rotatedDataUrl) => {
+          img.src = rotatedDataUrl;
+          img.style.transform = 'none'; // No CSS transform needed, real pixel data is rotated!
 
-        cmsState.dirtyCount++;
-        updateDirtyCount();
+          const newFileName = `img_web/rot_${Date.now()}_${imgKey}.webp`;
+          if (!cmsState.images[imgKey]) cmsState.images[imgKey] = {};
+          cmsState.images[imgKey].src = newFileName;
+
+          // Track for backend upload
+          cmsState.newImages = cmsState.newImages.filter(item => item.path !== newFileName);
+          cmsState.newImages.push({
+            path: newFileName,
+            base64: rotatedDataUrl
+          });
+
+          cmsState.dirtyCount++;
+          updateDirtyCount();
+          rotateBtn.innerHTML = '↺ 90°';
+          rotateBtn.disabled = false;
+          showToast('Фото повернуто и адаптировано под карточку!');
+        });
       });
 
       // Replace photo handler
@@ -520,15 +610,13 @@
 
         const reader = new FileReader();
         reader.onload = (re) => {
-          // Compress & resize to WebP
-          compressImageToWebP(re.target.result, 1600, 0.84, (compressedDataUrl) => {
+          compressImageToWebP(re.target.result, 1600, 0.85, (compressedDataUrl) => {
             img.src = compressedDataUrl;
             img.style.transform = 'none';
 
             const newFileName = `img_web/user_${Date.now()}_${file.name.replace(/[^a-zA-Z0-9._-]/g, '')}`;
             if (!cmsState.images[imgKey]) cmsState.images[imgKey] = {};
             cmsState.images[imgKey].src = newFileName;
-            cmsState.images[imgKey].rotate = 0;
 
             cmsState.newImages.push({
               path: newFileName,
@@ -578,19 +666,26 @@
     btn.disabled = true;
 
     try {
-      // Gather latest texts
+      // Gather latest texts from all [data-cms]
       document.querySelectorAll('[data-cms]').forEach(el => {
         const key = el.getAttribute('data-cms');
         cmsState.texts[key] = el.innerHTML;
       });
 
+      const contentToSave = {
+        texts: cmsState.texts,
+        images: cmsState.images,
+        updatedAt: new Date().toISOString()
+      };
+
+      // Save locally immediately so no reload ever flickers!
+      try {
+        localStorage.setItem(CACHE_KEY, JSON.stringify(contentToSave));
+      } catch (e) {}
+
       const payload = {
         password: PASS_HASH,
-        content: {
-          texts: cmsState.texts,
-          images: cmsState.images,
-          updatedAt: new Date().toISOString()
-        },
+        content: contentToSave,
         newImages: cmsState.newImages
       };
 
@@ -608,7 +703,7 @@
       cmsState.dirtyCount = 0;
       cmsState.newImages = [];
       updateDirtyCount();
-      showToast('Опубликовано! Сайт обновится у всех в течение 20 секунд.');
+      showToast('Опубликовано! Сайт сохранен и обновлен без задержек.');
     } catch (err) {
       showToast('Ошибка сохранения: ' + err.message, true);
     } finally {

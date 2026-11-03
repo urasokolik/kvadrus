@@ -24,6 +24,26 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Chivo+Mono:wght@500;700;900&family=Oswald:wght@500;600;700&family=Roboto+Condensed:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
   
+  <!-- Instant CMS Hydration (Anti-Flicker Guard) -->
+  <style id="cms-fouc-guard">
+    html:not(.cms-hydrated) body {
+      opacity: 0 !important;
+    }
+    body {
+      transition: opacity 0.12s ease-in-out;
+    }
+  </style>
+  <script>
+    (function() {
+      try {
+        var cached = localStorage.getItem('kvadrus_cms_cache');
+        if (cached) {
+          window.__KVADRUS_CACHE__ = JSON.parse(cached);
+        }
+      } catch(e) {}
+    })();
+  </script>
+
   <style>
     :root {
       --bg-darkest: #111419;
@@ -2679,29 +2699,49 @@
 
   <!-- Content Hydration & Admin CMS -->
   <script>
-    (async function loadKvadrusContent() {
-      try {
-        const res = await fetch('content.json?v=' + Date.now());
-        if (!res.ok) return;
-        const data = await res.json();
+    (function() {
+      function applyCmsData(data) {
+        if (!data) return;
         if (data.texts) {
-          for (const [key, val] of Object.entries(data.texts)) {
-            const el = document.querySelector(`[data-cms="${key}"]`);
-            if (el && val) el.innerHTML = val;
+          for (var key in data.texts) {
+            var el = document.querySelector('[data-cms="' + key + '"]');
+            if (el && data.texts[key]) el.innerHTML = data.texts[key];
           }
         }
         if (data.images) {
-          for (const [key, val] of Object.entries(data.images)) {
-            const img = document.querySelector(`[data-img-key="${key}"]`);
-            if (img) {
-              if (val.src) img.src = val.src;
-              if (val.rotate !== undefined) img.style.transform = `rotate(${val.rotate}deg)`;
+          for (var ikey in data.images) {
+            var img = document.querySelector('[data-img-key="' + ikey + '"]');
+            if (img && data.images[ikey]) {
+              if (data.images[ikey].src) img.src = data.images[ikey].src;
+              if (data.images[ikey].rotate) img.style.transform = 'rotate(' + data.images[ikey].rotate + 'deg)';
             }
           }
         }
-      } catch (e) {
-        console.log('Using default landing content');
       }
+
+      // 1. Instantly apply from local cache (0ms delay, no flicker!)
+      if (window.__KVADRUS_CACHE__) {
+        applyCmsData(window.__KVADRUS_CACHE__);
+      }
+
+      // 2. Fetch fresh content.json in background
+      fetch('content.json?v=' + Date.now())
+        .then(function(r) { return r.ok ? r.json() : null; })
+        .then(function(data) {
+          if (data) {
+            applyCmsData(data);
+            try { localStorage.setItem('kvadrus_cms_cache', JSON.stringify(data)); } catch(e) {}
+          }
+        })
+        .catch(function(e) { console.log('Using local content'); })
+        .finally(function() {
+          document.documentElement.classList.add('cms-hydrated');
+        });
+
+      // Safety timeout: ensure page is visible within 100ms
+      setTimeout(function() {
+        document.documentElement.classList.add('cms-hydrated');
+      }, 100);
     })();
   </script>
   <script src="admin-cms.js" defer></script>
