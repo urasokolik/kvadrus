@@ -151,13 +151,37 @@
       /* Image Overlay Controls */
       .admin-img-wrapper {
         position: relative !important;
-        overflow: hidden !important;
       }
 
-      .admin-img-wrapper img {
+      .gallery-card img, .eng-photo-card img {
         width: 100% !important;
         height: 100% !important;
         object-fit: cover !important;
+        display: block !important;
+      }
+
+      .photo-seal-russia {
+        position: absolute !important;
+        top: 14px !important;
+        right: 14px !important;
+        width: auto !important;
+        height: auto !important;
+        max-width: 160px !important;
+        max-height: 48px !important;
+        background: #FFFFFF !important;
+        padding: 6px 14px !important;
+        border-radius: 6px !important;
+        z-index: 10 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+      }
+
+      .photo-seal-russia img {
+        width: auto !important;
+        height: 28px !important;
+        max-width: 130px !important;
+        object-fit: contain !important;
         display: block !important;
       }
 
@@ -549,7 +573,7 @@
 
   // Setup Image Controls (Rotate via Canvas, Replace)
   function setupImageControls() {
-    const images = document.querySelectorAll('.gallery-card img, .eng-photo-card img, #main-kvadrus-photo, .hero-media-card img:not([src*="made_in_russia"])');
+    const images = document.querySelectorAll('.gallery-card img, .eng-photo-card img');
     images.forEach((img, idx) => {
       const parent = img.parentElement;
       if (!parent.classList.contains('admin-img-wrapper')) {
