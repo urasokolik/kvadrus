@@ -1648,10 +1648,12 @@
   <header class="site-header">
     <div class="container header-inner">
       <a href="#" class="brand-group" title="КВАДРУС 4х4 — Завод грузовых квадроциклов">
-        <img src="img_web/kvadrus-logo.png" alt="КВАДРУС" class="brand-logo-img">
+        <div style="position: relative; display: inline-flex; align-items: center;">
+          <img src="img_web/kvadrus-logo.png" alt="КВАДРУС" class="brand-logo-img" data-img-key="brand_logo">
+        </div>
         <div class="brand-titles">
-          <span class="brand-name" style="font-size: 15px; letter-spacing: 0.12em; color: var(--accent-yellow);">ЗАВОД 4х4</span>
-          <span class="brand-tagline" style="font-size: 10px; color: var(--text-muted);">ГРУЗОВАЯ СПЕЦТЕХНИКА</span>
+          <span class="brand-name" data-cms="brand_name" style="font-size: 15px; letter-spacing: 0.12em; color: var(--accent-yellow);">ЗАВОД 4х4</span>
+          <span class="brand-tagline" data-cms="brand_tagline" style="font-size: 10px; color: var(--text-muted);">ГРУЗОВАЯ СПЕЦТЕХНИКА</span>
         </div>
       </a>
 
@@ -1678,8 +1680,8 @@
   <div class="links-bar">
     <div class="container links-bar-inner">
       <div class="links-bar-text">
-        <strong style="color: #FFF;">Официальные площадки:</strong>
-        <span>Видео ходовых тестов, отзывы и актуальное наличие</span>
+        <strong data-cms="channels_bar_title" style="color: #FFF;">Официальные площадки:</strong>
+        <span data-cms="channels_bar_desc">Видео ходовых тестов, отзывы и актуальное наличие</span>
       </div>
       <div class="links-bar-btns">
         <a href="https://max.ru/se14885220_bot" target="_blank" rel="noopener" class="btn btn-max" style="padding: 6px 14px; font-size: 13px; background: #2B66FF; color: #fff; font-weight: 700; border: none; display: inline-flex; align-items: center; gap: 6px;">

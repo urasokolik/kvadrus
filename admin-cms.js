@@ -502,6 +502,8 @@
       '.footer-nav li', '.btn', '.badge', 
       '.eng-item h4', '.eng-item p', '.eng-tag',
       '.calc-card', '.credit-card', '.hero-lead-text',
+      '.brand-name', '.brand-tagline',
+      '.links-bar-text strong', '.links-bar-text span',
       '[data-cms]'
     ];
 
@@ -663,6 +665,56 @@
         reader.readAsDataURL(file);
       });
     });
+
+    // Brand Logo Support
+    const logoImg = document.querySelector('.brand-logo-img');
+    if (logoImg && !logoImg.parentElement.querySelector('.admin-logo-toolbar')) {
+      const parent = logoImg.parentElement;
+      const logoToolbar = document.createElement('div');
+      logoToolbar.className = 'admin-img-toolbar admin-logo-toolbar';
+      logoToolbar.style.top = '-6px';
+      logoToolbar.style.right = '-6px';
+      logoToolbar.innerHTML = `
+        <button type="button" class="admin-img-btn" data-act="replace-logo" title="Загрузить новый логотип">📁</button>
+        <input type="file" accept="image/*" style="display:none" class="admin-logo-file-input">
+      `;
+      parent.appendChild(logoToolbar);
+
+      const replaceBtn = logoToolbar.querySelector('[data-act="replace-logo"]');
+      const fileInput = logoToolbar.querySelector('.admin-logo-file-input');
+
+      replaceBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        fileInput.click();
+      });
+
+      fileInput.addEventListener('change', () => {
+        const file = fileInput.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (re) => {
+          compressImageToWebP(re.target.result, 600, 0.9, (compressedDataUrl) => {
+            logoImg.src = compressedDataUrl;
+            const newFileName = `img_web/user_logo_${Date.now()}_${file.name.replace(/[^a-zA-Z0-9._-]/g, '')}`;
+            
+            if (!cmsState.images['brand_logo']) cmsState.images['brand_logo'] = {};
+            cmsState.images['brand_logo'].src = newFileName;
+
+            cmsState.newImages.push({
+              path: newFileName,
+              base64: compressedDataUrl
+            });
+
+            cmsState.dirtyCount++;
+            updateDirtyCount();
+            showToast('Логотип заменен! Нажмите «Опубликовать», чтобы сохранить.');
+          });
+        };
+        reader.readAsDataURL(file);
+      });
+    }
   }
 
   // Compress image on canvas
