@@ -2164,11 +2164,14 @@
       </div>
 
       <div class="video-tabs">
-        <button class="video-tab-btn active" id="tab-v1" onclick="switchVideo('walkaround')">
+        <button class="video-tab-btn active" id="tab-v-dele" onclick="switchVideo('v-dele')">
+          🔥 КВАДРУС в деле (бездорожье)
+        </button>
+        <button class="video-tab-btn" id="tab-v1" onclick="switchVideo('walkaround')">
           Видеообзор и конструкция
         </button>
         <button class="video-tab-btn" id="tab-v2" onclick="switchVideo('action')">
-          Ходовые испытания в движении
+          Ходовые испытания (песок)
         </button>
       </div>
 
@@ -2178,8 +2181,8 @@
           <div class="video-play-circle">
             <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
           </div>
-          <div class="video-play-title">ЗАПУСТИТЬ ВИДЕО ТЕСТ-ДРАЙВА</div>
-          <div class="video-play-sub">Нажмите, чтобы включить воспроизведение со звуком</div>
+          <div class="video-play-title">ПОСМОТРЕТЬ КВАДРУС В ДЕЛЕ</div>
+          <div class="video-play-sub">Реальная езда: песок, асфальт, подъем в крутую горку</div>
         </div>
 
         <video id="main-video-player" 
@@ -2188,9 +2191,9 @@
                playsinline 
                webkit-playsinline 
                preload="none" 
-               poster="img_web/hero-main-kvadrus.jpg"
-               src="img_web/kvadrus-walkaround.mp4">
-          <source id="video-src" src="img_web/kvadrus-walkaround.mp4" type="video/mp4">
+               poster="img_web/poster-kvadrus-v-dele.jpg"
+               src="img_web/kvadrus-v-dele.mp4">
+          <source id="video-src" src="img_web/kvadrus-v-dele.mp4" type="video/mp4">
           Ваш браузер не поддерживает видео HTML5.
         </video>
       </div>
@@ -2200,7 +2203,7 @@
         <a href="https://vk.ru/club242743234" target="_blank" rel="noopener" class="btn btn-vk" style="font-size: 13px; padding: 8px 16px;">
           Смотреть ролики в группе ВКонтакте ↗
         </a>
-        <a id="direct-video-link" href="img_web/kvadrus-walkaround.mp4" target="_blank" class="btn btn-secondary" style="font-size: 13px; padding: 8px 16px;">
+        <a id="direct-video-link" href="img_web/kvadrus-v-dele.mp4" target="_blank" class="btn btn-secondary" style="font-size: 13px; padding: 8px 16px;">
           Открыть видеофайл напрямую ↗
         </a>
       </div>
@@ -2563,7 +2566,7 @@
       if (v) {
         if (!v.src || v.src === '' || v.src.endsWith('/')) {
           const srcEl = document.getElementById('video-src');
-          v.src = (srcEl && srcEl.src) ? srcEl.src : 'img_web/kvadrus-walkaround.mp4';
+          v.src = (srcEl && srcEl.src) ? srcEl.src : 'img_web/kvadrus-v-dele.mp4';
         }
         v.play().catch(err => {
           console.warn('Playback error:', err);
@@ -2577,47 +2580,58 @@
       const v = document.getElementById('main-video-player');
       const src = document.getElementById('video-src');
       const direct = document.getElementById('direct-video-link');
-      const tab1 = document.getElementById('tab-v1');
-      const tab2 = document.getElementById('tab-v2');
+      const tabVDele = document.getElementById('tab-v-dele');
+      const tabWalk = document.getElementById('tab-v1');
+      const tabAction = document.getElementById('tab-v2');
       const overlay = document.getElementById('videoPlayOverlay');
 
-      const isAction = (type === 'action');
-      const nextUrl = isAction ? 'img_web/kvadrus-action.mp4' : 'img_web/kvadrus-walkaround.mp4';
+      let nextUrl = 'img_web/kvadrus-v-dele.mp4';
+      let poster = 'img_web/poster-kvadrus-v-dele.jpg';
+      let playTitle = 'ПОСМОТРЕТЬ КВАДРУС В ДЕЛЕ';
 
-      if (isAction) {
-        tab2.classList.add('active');
-        tab1.classList.remove('active');
-      } else {
-        tab1.classList.add('active');
-        tab2.classList.remove('active');
+      [tabVDele, tabWalk, tabAction].forEach(t => t && t.classList.remove('active'));
+
+      if (type === 'v-dele') {
+        if (tabVDele) tabVDele.classList.add('active');
+        nextUrl = 'img_web/kvadrus-v-dele.mp4';
+        poster = 'img_web/poster-kvadrus-v-dele.jpg';
+        playTitle = 'ПОСМОТРЕТЬ КВАДРУС В ДЕЛЕ';
+      } else if (type === 'walkaround') {
+        if (tabWalk) tabWalk.classList.add('active');
+        nextUrl = 'img_web/kvadrus-walkaround.mp4';
+        poster = 'img_web/hero-main-kvadrus.jpg';
+        playTitle = 'ВИДЕООБЗОР И КОНСТРУКЦИЯ';
+      } else if (type === 'action') {
+        if (tabAction) tabAction.classList.add('active');
+        nextUrl = 'img_web/kvadrus-action.mp4';
+        poster = 'img_web/gallery-field-eurocube.jpg';
+        playTitle = 'ХОДОВЫЕ ИСПЫТАНИЯ В ДВИЖЕНИИ';
       }
 
       if (direct) direct.href = nextUrl;
 
-      // Проверяем, играло ли видео в момент переключения таба
       const wasPlaying = !v.paused && !v.ended && v.currentTime > 0;
 
-      // Корректно меняем источник: и в v.src, и в source
       v.pause();
       v.removeAttribute('src');
       if (src) src.src = nextUrl;
       v.src = nextUrl;
+      v.poster = poster;
       v.load();
 
       if (wasPlaying) {
-        // Если пользователь уже смотрел — бесшовно продолжаем воспроизведение нового видео
         v.play().catch(e => console.log('Play prevented:', e));
         if (overlay) overlay.classList.add('hidden');
       } else {
-        // Если видео не играло — просто возвращаем красивую плашку запуска нового ролика
         if (overlay) {
           overlay.classList.remove('hidden');
           const titleEl = overlay.querySelector('.video-play-title');
           if (titleEl) {
-            titleEl.innerText = isAction ? 'ХОДОВЫЕ ИСПЫТАНИЯ В ДВИЖЕНИИ' : 'ВИДЕООБЗОР И КОНСТРУКЦИЯ';
+            titleEl.innerText = playTitle;
           }
         }
       }
+    }
     }
 
     // Live economy calculator
