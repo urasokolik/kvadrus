@@ -1676,38 +1676,38 @@
         <div>
           <div class="eyebrow">РОССИЙСКАЯ СПЕЦТЕХНИКА ДЛЯ ТЯЖЕЛОЙ РАБОТЫ</div>
           
-          <h1 class="hero-main-title">
+          <h1 class="hero-main-title" data-cms="hero_title">
             ГРУЗОВОЙ КВАДРОЦИКЛ <span class="highlight">КВАДРУС 4х4</span>
           </h1>
 
-          <p class="hero-lead-text">
+          <p class="hero-lead-text" data-cms="hero_lead">
             Собран на отечественном производстве из толстостенной стали с двойными швами. Водяное охлаждение мотора, раздатка с понижайкой и рекордный кузов 1250×1800 мм на 1 000 кг полезного груза.
           </p>
 
           <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px;">
-            <span style="background: rgba(242, 169, 0, 0.12); border: 1px solid rgba(242, 169, 0, 0.35); color: var(--accent-yellow); font-size: 11.5px; font-weight: 700; padding: 4px 10px; border-radius: 3px;">
+            <span data-cms="hero_badge_installment" style="background: rgba(242, 169, 0, 0.12); border: 1px solid rgba(242, 169, 0, 0.35); color: var(--accent-yellow); font-size: 11.5px; font-weight: 700; padding: 4px 10px; border-radius: 3px;">
               ⚡ БЕСПРОЦЕНТНАЯ РАССРОЧКА 0% ОТ БАНКОВ
             </span>
-            <span style="background: rgba(37, 211, 102, 0.12); border: 1px solid rgba(37, 211, 102, 0.35); color: #25D366; font-size: 11.5px; font-weight: 700; padding: 4px 10px; border-radius: 3px;">
+            <span data-cms="hero_badge_factory" style="background: rgba(37, 211, 102, 0.12); border: 1px solid rgba(37, 211, 102, 0.35); color: #25D366; font-size: 11.5px; font-weight: 700; padding: 4px 10px; border-radius: 3px;">
               🇷🇺 ЗАВОД В ВОЛГОГРАДЕ (НЕ КИТАЙ)
             </span>
           </div>
 
           <div class="specs-strip">
             <div class="spec-box">
-              <div class="spec-box-val">1 000<sub>кг</sub></div>
+              <div class="spec-box-val" data-cms="hero_spec_payload">1 000<sub>кг</sub></div>
               <div class="spec-box-lbl">В кузове</div>
             </div>
             <div class="spec-box">
-              <div class="spec-box-val">300<sub>см³</sub></div>
+              <div class="spec-box-val" data-cms="hero_spec_cooling">300<sub>см³</sub></div>
               <div class="spec-box-lbl">Водяное охл.</div>
             </div>
             <div class="spec-box">
-              <div class="spec-box-val">4WD<sub>+L</sub></div>
+              <div class="spec-box-val" data-cms="hero_spec_drive">4WD<sub>+L</sub></div>
               <div class="spec-box-lbl">Понижайка</div>
             </div>
             <div class="spec-box">
-              <div class="spec-box-val">290<sub>мм</sub></div>
+              <div class="spec-box-val" data-cms="hero_spec_clearance">290<sub>мм</sub></div>
               <div class="spec-box-lbl">Клиренс</div>
             </div>
           </div>
@@ -1728,10 +1728,10 @@
           <div class="photo-seal-russia" title="Сделано в России — официальный знак качества">
             <img src="img_web/made_in_russia_raw.png" alt="Сделано в России">
           </div>
-          <img src="img_web/hero-main-kvadrus.jpg" alt="Грузовой квадроцикл КВАДРУС 4х4" class="hero-photo-main">
+          <img src="img_web/hero-main-kvadrus.jpg" alt="Грузовой квадроцикл КВАДРУС 4х4" class="hero-photo-main" id="main-kvadrus-photo" data-img-key="hero_main">
           <div class="hero-media-footer">
-            <span class="hero-media-badge">КВАДРУС • 100% ГОТОВ К РАБОТЕ</span>
-            <span style="font-family: var(--font-mono); font-size: 11px; color: #4ADE80; font-weight: 700;">● В НАЛИЧИИ В РФ</span>
+            <span class="hero-media-badge" data-cms="hero_media_badge">КВАДРУС • 100% ГОТОВ К РАБОТЕ</span>
+            <span style="font-family: var(--font-mono); font-size: 11px; color: #4ADE80; font-weight: 700;" data-cms="hero_stock_status">● В НАЛИЧИИ В РФ</span>
           </div>
         </div>
       </div>
@@ -1936,20 +1936,20 @@
         <!-- Real Factory Photo Grid -->
         <div class="eng-gallery-2col">
           <div class="eng-photo-card">
-            <img src="img_web/gallery-frame-welding.jpg" alt="Двойные сварные швы рамы КВАДРУС" loading="lazy" decoding="async">
-            <div class="cap">Двойные швы толстостенной рамы</div>
+            <img src="img_web/gallery-frame-welding.jpg" alt="Двойные сварные швы рамы КВАДРУС" loading="lazy" decoding="async" data-img-key="eng_0">
+            <div class="cap" data-cms="eng_cap_0">Двойные швы толстостенной рамы</div>
           </div>
           <div class="eng-photo-card">
-            <img src="img_web/gallery-engine-cooling.jpg" alt="Система водяного охлаждения 300 см³" loading="lazy" decoding="async">
-            <div class="cap">Радиатор и помпа водяного охл.</div>
+            <img src="img_web/gallery-engine-cooling.jpg" alt="Система водяного охлаждения 300 см³" loading="lazy" decoding="async" data-img-key="eng_1">
+            <div class="cap" data-cms="eng_cap_1">Радиатор и помпа водяного охл.</div>
           </div>
           <div class="eng-photo-card">
-            <img src="img_web/gallery-suspension-revers.jpg" alt="Задний мост с дифференциалом" loading="lazy" decoding="async">
-            <div class="cap">Мост с дифференциалом и реверсом</div>
+            <img src="img_web/gallery-suspension-revers.jpg" alt="Задний мост с дифференциалом" loading="lazy" decoding="async" data-img-key="eng_2">
+            <div class="cap" data-cms="eng_cap_2">Мост с дифференциалом и реверсом</div>
           </div>
           <div class="eng-photo-card">
-            <img src="img_web/gallery-chassis-detail.jpg" alt="Подвеска и дорожный просвет 290 мм" loading="lazy" decoding="async">
-            <div class="cap">Честный дорожный просвет 290 мм</div>
+            <img src="img_web/gallery-chassis-detail.jpg" alt="Подвеска и дорожный просвет 290 мм" loading="lazy" decoding="async" data-img-key="eng_3">
+            <div class="cap" data-cms="eng_cap_3">Честный дорожный просвет 290 мм</div>
           </div>
         </div>
       </div>
@@ -2064,36 +2064,36 @@
 
       <div class="gallery-grid">
         <div class="gallery-card">
-          <img src="img_web/raptor-photo-1.jpg" alt="КВАДРУС вид спереди" loading="lazy" decoding="async">
-          <div class="gallery-caption">Вид спереди: силовой бампер и оптика</div>
+          <img src="img_web/raptor-photo-1.jpg" alt="КВАДРУС вид спереди" loading="lazy" decoding="async" data-img-key="gallery_0">
+          <div class="gallery-caption" data-cms="gallery_cap_0">Вид спереди: силовой бампер и оптика</div>
         </div>
         <div class="gallery-card">
-          <img src="img_web/raptor-photo-2.jpg" alt="Откидной задний борт кузова" loading="lazy" decoding="async">
-          <div class="gallery-caption">Откидной борт: быстрая погрузка бревен</div>
+          <img src="img_web/raptor-photo-2.jpg" alt="Откидной задний борт кузова" loading="lazy" decoding="async" data-img-key="gallery_1">
+          <div class="gallery-caption" data-cms="gallery_cap_1">Откидной борт: быстрая погрузка бревен</div>
         </div>
         <div class="gallery-card">
-          <img src="img_web/raptor-photo-3.jpg" alt="Рессорная подвеска КВАДРУС" loading="lazy" decoding="async">
-          <div class="gallery-caption">Рессорная тележка под нагрузку 1 тонна</div>
+          <img src="img_web/raptor-photo-3.jpg" alt="Рессорная подвеска КВАДРУС" loading="lazy" decoding="async" data-img-key="gallery_2">
+          <div class="gallery-caption" data-cms="gallery_cap_2">Рессорная тележка под нагрузку 1 тонна</div>
         </div>
         <div class="gallery-card">
-          <img src="img_web/raptor-photo-5.jpg" alt="Эргономика и органы управления" loading="lazy" decoding="async">
-          <div class="gallery-caption">5-МКПП с реверсом и приборная панель</div>
+          <img src="img_web/raptor-photo-5.jpg" alt="Эргономика и органы управления" loading="lazy" decoding="async" data-img-key="gallery_3">
+          <div class="gallery-caption" data-cms="gallery_cap_3">5-МКПП с реверсом и приборная панель</div>
         </div>
         <div class="gallery-card">
-          <img src="img_web/gallery-production-1.jpg" alt="Цех сборки в РФ" loading="lazy" decoding="async">
-          <div class="gallery-caption">Цех сборки и протяжки узлов в РФ</div>
+          <img src="img_web/gallery-production-1.jpg" alt="Цех сборки в РФ" loading="lazy" decoding="async" data-img-key="gallery_4">
+          <div class="gallery-caption" data-cms="gallery_cap_4">Цех сборки и протяжки узлов в РФ</div>
         </div>
         <div class="gallery-card">
-          <img src="img_web/gallery-production-2.jpg" alt="Сварочный пост рамы" loading="lazy" decoding="async">
-          <div class="gallery-caption">Контроль геометрии сварного контура</div>
+          <img src="img_web/gallery-production-2.jpg" alt="Сварочный пост рамы" loading="lazy" decoding="async" data-img-key="gallery_5">
+          <div class="gallery-caption" data-cms="gallery_cap_5">Контроль геометрии сварного контура</div>
         </div>
         <div class="gallery-card">
-          <img src="img_web/hero-alt-outdoor.jpg" alt="КВАДРУС на полигоне" loading="lazy" decoding="async">
-          <div class="gallery-caption">КВАДРУС на испытательном полигоне</div>
+          <img src="img_web/hero-alt-outdoor.jpg" alt="КВАДРУС на полигоне" loading="lazy" decoding="async" data-img-key="gallery_6">
+          <div class="gallery-caption" data-cms="gallery_cap_6">КВАДРУС на испытательном полигоне</div>
         </div>
         <div class="gallery-card">
-          <img src="img_web/gallery-overall-view.jpg" alt="Готовая техника" loading="lazy" decoding="async">
-          <div class="gallery-caption">Готовый к отгрузке квадроцикл «из коробки»</div>
+          <img src="img_web/gallery-overall-view.jpg" alt="Готовая техника" loading="lazy" decoding="async" data-img-key="gallery_7">
+          <div class="gallery-caption" data-cms="gallery_cap_7">Готовый к отгрузке квадроцикл «из коробки»</div>
         </div>
       </div>
     </div>
@@ -2318,7 +2318,7 @@
             <li>Привод: 4х4 + понижающая</li>
             <li>5-МКПП с реверсом</li>
             <li>Дифференциал заднего моста</li>
-            <li>Кузов: 1250 × 1800 мм</li>
+            <li id="admin-trigger-cub" title="Кузов: 1250 × 1800 мм" style="cursor: pointer; user-select: none;">Кузов: 1250 × 1800 мм</li>
           </ul>
         </div>
 
@@ -2676,5 +2676,34 @@
       <span class="contact-float-tooltip">Написать в WhatsApp</span>
     </a>
   </div>
+
+  <!-- Content Hydration & Admin CMS -->
+  <script>
+    (async function loadKvadrusContent() {
+      try {
+        const res = await fetch('content.json?v=' + Date.now());
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.texts) {
+          for (const [key, val] of Object.entries(data.texts)) {
+            const el = document.querySelector(`[data-cms="${key}"]`);
+            if (el && val) el.innerHTML = val;
+          }
+        }
+        if (data.images) {
+          for (const [key, val] of Object.entries(data.images)) {
+            const img = document.querySelector(`[data-img-key="${key}"]`);
+            if (img) {
+              if (val.src) img.src = val.src;
+              if (val.rotate !== undefined) img.style.transform = `rotate(${val.rotate}deg)`;
+            }
+          }
+        }
+      } catch (e) {
+        console.log('Using default landing content');
+      }
+    })();
+  </script>
+  <script src="admin-cms.js" defer></script>
 </body>
 </html>
