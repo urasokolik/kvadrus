@@ -2029,7 +2029,8 @@
                playsinline 
                webkit-playsinline 
                preload="none" 
-               poster="img_web/hero-main-kvadrus.jpg">
+               poster="img_web/hero-main-kvadrus.jpg"
+               src="img_web/kvadrus-walkaround.mp4">
           <source id="video-src" src="img_web/kvadrus-walkaround.mp4" type="video/mp4">
           Ваш браузер не поддерживает видео HTML5.
         </video>
@@ -2406,6 +2407,10 @@
       const overlay = document.getElementById('videoPlayOverlay');
       if (overlay) overlay.classList.add('hidden');
       if (v) {
+        if (!v.src || v.src === '' || v.src.endsWith('/')) {
+          const srcEl = document.getElementById('video-src');
+          v.src = (srcEl && srcEl.src) ? srcEl.src : 'img_web/kvadrus-walkaround.mp4';
+        }
         v.play().catch(err => {
           console.warn('Playback error:', err);
           // Показываем стандартные контролы если автоплей заблокирован
