@@ -2529,7 +2529,9 @@
   <div class="modal-overlay" id="leadModal" onclick="closeModalOnBackdrop(event)">
     <div class="modal-box">
       <button class="modal-close-btn" onclick="closeModal()">&times;</button>
-      <div class="eyebrow" id="modalSubject">ЗАПРОС СПЕЦИФИКАЦИИ</div>
+      
+      <div id="modalFormBody">
+        <div class="eyebrow" id="modalSubject">ЗАПРОС СПЕЦИФИКАЦИИ</div>
       <h3 style="font-size: 20px; margin-bottom: 6px;">ОСТАВЬТЕ КОНТАКТЫ</h3>
       <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 16px; line-height: 1.5;">
         Мы свяжемся с вами в течение 10 минут, ответим на любые вопросы и рассчитаем точную стоимость доставки до вашего адреса.
@@ -2545,7 +2547,7 @@
           <option value="Безналичный расчет для юрлиц/КФХ">Безналичный расчет для юрлиц / КФХ (с НДС)</option>
           <option value="Льготный лизинг">Льготный лизинг для сельхозпроизводителей</option>
         </select>
-        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 4px;">
+        <button type="submit" id="modalSubmitBtn" class="btn btn-primary" style="width: 100%; margin-top: 4px;">
           Получить расчет и условия рассрочки
         </button>
         <div style="text-align: center; margin: 2px 0; color: var(--text-muted); font-size: 11px; text-transform: uppercase; letter-spacing: 1px;">или напишите напрямую менеджеру</div>
@@ -2554,6 +2556,19 @@
           НАПИСАТЬ В WHATSAPP
         </a>
       </form>
+      </div>
+
+      <div id="modalSuccessBody" style="display: none; text-align: center; padding: 20px 10px;">
+        <div style="font-size: 56px; line-height: 1; margin-bottom: 16px;">✅</div>
+        <h3 style="font-size: 24px; color: var(--accent-yellow); margin-bottom: 10px; font-family: var(--font-display); letter-spacing: 0.05em;">ЗАЯВКА ПРИНЯТА!</h3>
+        <p style="color: #fff; font-size: 15px; line-height: 1.6; margin-bottom: 24px;">
+          Спасибо за обращение! Отдел продаж завода уже получил вашу заявку.<br>
+          Мы свяжемся с вами в течение 10 минут.
+        </p>
+        <button type="button" class="btn btn-primary" onclick="closeModal()" style="width: 100%; max-width: 280px; margin: 0 auto; font-size: 15px; padding: 12px 24px;">
+          Скоро с вами свяжемся
+        </button>
+      </div>
     </div>
   </div>
 
@@ -2668,6 +2683,10 @@
     // Modal
     function openModal(title) {
       document.getElementById('modalSubject').innerText = title.toUpperCase();
+      var fb = document.getElementById('modalFormBody');
+      var sb = document.getElementById('modalSuccessBody');
+      if (fb) fb.style.display = 'block';
+      if (sb) sb.style.display = 'none';
       document.getElementById('leadModal').classList.add('open');
     }
 
@@ -2687,7 +2706,7 @@
       whatsappPhone: '79608732828', // Номер владельца КВАДРУС 4х4
 
       // Открывать чат WhatsApp с предзаполненным текстом после заполнения формы:
-      openWhatsAppOnSubmit: true,
+      openWhatsAppOnSubmit: false, // Не перекидывать на другую страницу
 
       // 2. Дополнительно (если появится Telegram-бот):
       telegramBotToken: '',
@@ -2737,9 +2756,7 @@
 
       // Фоновая отправка заявки в MAX-бот
       try {
-        const leadEndpoint = (window.location.origin.includes('netlify') || window.location.origin.includes('kvadrys.ru')) 
-          ? '/.netlify/functions/send-lead' 
-          : 'https://kvadrus-official.netlify.app/.netlify/functions/send-lead';
+        const leadEndpoint = 'https://kvadrus-official.netlify.app/.netlify/functions/send-lead';
         fetch(leadEndpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -2808,20 +2825,48 @@
     async function handleFormSubmit(e) {
       e.preventDefault();
       const form = e.target;
+      const submitBtn = form.querySelector('button[type="submit"]');
+      const origText = submitBtn ? submitBtn.innerHTML : '';
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '⏳ Отправка заявки...';
+      }
       const formData = new FormData(form);
       await processLead(formData, form.getAttribute('data-title') || 'Основная форма заявки');
-      showToast('ЗАЯВКА ПРИНЯТА! Перенаправляем в WhatsApp...');
       form.reset();
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = origText;
+      }
+      // Показываем окно благодарности
+      document.getElementById('modalSubject').innerText = 'ЗАЯВКА ПРИНЯТА';
+      var fb = document.getElementById('modalFormBody');
+      var sb = document.getElementById('modalSuccessBody');
+      if (fb) fb.style.display = 'none';
+      if (sb) sb.style.display = 'block';
+      document.getElementById('leadModal').classList.add('open');
     }
 
     async function handleModalSubmit(e) {
       e.preventDefault();
       const form = e.target;
+      const submitBtn = document.getElementById('modalSubmitBtn');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '⏳ Отправка заявки...';
+      }
       const formData = new FormData(form);
       await processLead(formData, 'Всплывающее окно: Запрос КП и спецификации');
-      closeModal();
-      showToast('ЗАЯВКА ПРИНЯТА! Открываем WhatsApp...');
       form.reset();
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = 'Получить расчет и условия рассрочки';
+      }
+      // Показываем плашку «Скоро с вами свяжемся»
+      var fb = document.getElementById('modalFormBody');
+      var sb = document.getElementById('modalSuccessBody');
+      if (fb) fb.style.display = 'none';
+      if (sb) sb.style.display = 'block';
     }
 
     // Init
