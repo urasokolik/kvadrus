@@ -2905,7 +2905,7 @@
             if (img && data.images[ikey]) {
               if (data.images[ikey].src) {
                 var imgSrc = data.images[ikey].src;
-                if (imgSrc.startsWith('img_web/uploads/') || imgSrc.startsWith('img_web/rot_')) {
+                if (imgSrc.startsWith('img_web/uploads/') || imgSrc.startsWith('img_web/rot_') || imgSrc.startsWith('img_web/user_')) {
                   img.src = 'https://raw.githubusercontent.com/urasokolik/kvadrus/main/' + imgSrc;
                 } else {
                   img.src = imgSrc;
