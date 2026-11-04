@@ -927,6 +927,8 @@
   // Activate Admin Mode
   function activateAdminMode() {
     document.body.classList.add('admin-mode-active');
+    const badge = document.getElementById('kvadrus-cms-floating-badge');
+    if (badge) badge.style.display = 'none';
     injectStyles();
     renderAdminBar();
     setupEditableTexts();
@@ -936,6 +938,19 @@
   // Global trigger setup
   function initTrigger() {
     injectStyles();
+
+    // Floating CMS button in bottom-left
+    if (!document.getElementById('kvadrus-cms-floating-badge')) {
+      const floatBtn = document.createElement('button');
+      floatBtn.id = 'kvadrus-cms-floating-badge';
+      floatBtn.innerHTML = '⚙️ CMS';
+      floatBtn.title = 'Редактировать сайт';
+      floatBtn.style.cssText = 'position:fixed;bottom:18px;left:18px;z-index:999999;background:rgba(17,20,25,0.88);border:1px solid rgba(242,169,0,0.6);color:#F2A900;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700;font-family:monospace;cursor:pointer;backdrop-filter:blur(6px);box-shadow:0 4px 14px rgba(0,0,0,0.6);transition:all 0.2s;';
+      floatBtn.onmouseover = () => { floatBtn.style.background = '#F2A900'; floatBtn.style.color = '#111419'; };
+      floatBtn.onmouseout = () => { floatBtn.style.background = 'rgba(17,20,25,0.88)'; floatBtn.style.color = '#F2A900'; };
+      floatBtn.onclick = () => showAuthModal();
+      document.body.appendChild(floatBtn);
+    }
 
     // Check if already authenticated this session
     if (sessionStorage.getItem(AUTH_KEY) === PASS_HASH) {

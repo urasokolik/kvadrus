@@ -1818,7 +1818,7 @@
           <div class="eyebrow">РОССИЙСКАЯ СПЕЦТЕХНИКА ДЛЯ ТЯЖЕЛОЙ РАБОТЫ</div>
           
           <h1 class="hero-main-title" data-cms="hero_title">
-            ГРУЗОВОЙ КВАДРОЦИКЛ <span class="highlight">КВАДРУС 4х4</span>
+            ГРУЗОВОЙ КВАДРОЦИКЛ <span class="highlight">КВАДРУС ФЕРМЕР</span>
           </h1>
 
           <p class="hero-lead-text" data-cms="hero_lead">
@@ -2856,6 +2856,41 @@
   <!-- Content Hydration & Admin CMS -->
   <script>
     (function() {
+      function setupDeterministicKeys() {
+        var selectors = [
+          'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 
+          'p', '.eyebrow', '.highlight', 
+          '.spec-box-val', '.spec-box-lbl', 
+          '.hero-media-badge', '.cap', '.gallery-caption', 
+          '.footer-nav li', '.btn', '.badge', 
+          '.eng-item h4', '.eng-item p', '.eng-tag',
+          '.calc-card', '.credit-card', '.hero-lead-text',
+          '.brand-name', '.brand-tagline',
+          '.links-bar-text strong', '.links-bar-text span',
+          '[data-cms]'
+        ];
+        var elements = document.querySelectorAll(selectors.join(', '));
+        var idx = 0;
+        elements.forEach(function(el) {
+          if (['SCRIPT', 'STYLE', 'INPUT', 'TEXTAREA', 'SELECT', 'VIDEO'].indexOf(el.tagName) !== -1) return;
+          var hasBlockChildren = Array.from(el.children).some(function(child) {
+            return ['DIV', 'SECTION', 'UL', 'OL', 'TABLE', 'FORM'].indexOf(child.tagName) !== -1;
+          });
+          if (hasBlockChildren && !el.hasAttribute('data-cms')) return;
+
+          if (!el.getAttribute('data-cms')) {
+            var section = el.closest('section') ? el.closest('section').id : (el.closest('header, footer, nav') ? el.closest('header, footer, nav').tagName.toLowerCase() : 'sec');
+            var tag = el.tagName.toLowerCase();
+            var classSnippet = (el.className && typeof el.className === 'string') 
+              ? el.className.split(' ').filter(function(c) { return !c.startsWith('admin-'); }).slice(0, 1).join('_') 
+              : '';
+            var key = 'cms_' + section + '_' + tag + (classSnippet ? '_' + classSnippet : '') + '_' + idx;
+            el.setAttribute('data-cms', key);
+          }
+          idx++;
+        });
+      }
+
       function applyCmsData(data) {
         if (!data) return;
         if (data.texts) {
@@ -2881,6 +2916,9 @@
           }
         }
       }
+
+      // Pre-tag all elements deterministically so any visitor sees all CMS edits!
+      setupDeterministicKeys();
 
       // 1. Instantly apply from local cache (0ms delay, no flicker!)
       if (window.__KVADRUS_CACHE__) {
