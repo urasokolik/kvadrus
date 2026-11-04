@@ -2863,7 +2863,14 @@
           for (var ikey in data.images) {
             var img = document.querySelector('[data-img-key="' + ikey + '"]');
             if (img && data.images[ikey]) {
-              if (data.images[ikey].src) img.src = data.images[ikey].src;
+              if (data.images[ikey].src) {
+                var imgSrc = data.images[ikey].src;
+                if (imgSrc.startsWith('img_web/uploads/')) {
+                  img.src = 'https://raw.githubusercontent.com/urasokolik/kvadrus/main/' + imgSrc;
+                } else {
+                  img.src = imgSrc;
+                }
+              }
               if (data.images[ikey].rotate) img.style.transform = 'rotate(' + data.images[ikey].rotate + 'deg)';
             }
           }
@@ -2875,9 +2882,11 @@
         applyCmsData(window.__KVADRUS_CACHE__);
       }
 
-      // 2. Fetch fresh content.json in background
-      fetch('content.json?v=' + Date.now())
-        .then(function(r) { return r.ok ? r.json() : null; })
+      // 2. Fetch fresh content.json in background (try raw GitHub first for instant real-time sync, fallback to local)
+      var githubContentUrl = 'https://raw.githubusercontent.com/urasokolik/kvadrus/main/content.json?v=' + Date.now();
+      fetch(githubContentUrl)
+        .then(function(r) { return r.ok ? r.json() : Promise.reject(); })
+        .catch(function() { return fetch('content.json?v=' + Date.now()).then(function(r) { return r.ok ? r.json() : null; }); })
         .then(function(data) {
           if (data) {
             applyCmsData(data);
