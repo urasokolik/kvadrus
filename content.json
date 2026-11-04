@@ -4,8 +4,8 @@
     "brand_name": "ЗАВОД ТЕХНИКИ",
     "brand_tagline": "ГРУЗОВАЯ СПЕЦТЕХНИКА",
     "cms_header_button_btn_2": "\n          Получить КП\n        ",
-    "channels_bar_title": "Официальные площадки:",
-    "channels_bar_desc": "Видео ходовых тестов, отзывы и актуальное наличие",
+    "channels_bar_title": "",
+    "channels_bar_desc": "",
     "cms_sec_a_btn_5": "\n          <span style=\"display:inline-block; width:8px; height:8px; background:#fff; border-radius:50%;\"></span> Чат в MAX\n        ",
     "cms_sec_a_btn_6": "\n          Сообщество ВКонтакте\n        ",
     "cms_sec_a_btn_7": "\n          Объявление на Авито\n        ",
@@ -74,7 +74,7 @@
     "cms_video_a_btn_71": "\n          Все видеоролики и тесты в нашей группе ВК ↗\n        ",
     "cms_gallery_div_eyebrow_72": "ФОТООТЧЕТ С ПРОИЗВОДСТВА",
     "cms_gallery_h2_section-title_73": "НАСТОЯЩИЕ ФОТОГРАФИИ МАШИНЫ",
-    "cms_gallery_p_section-desc_74": "Только живая техника и реальное производство. Никаких отрендеренных картинок.",
+    "cms_gallery_p_section-desc_74": "<br>",
     "gallery_cap_0": "КВАДРУС с кубом 1 000 кг на полигоне",
     "gallery_cap_1": "КВАДРУС в степи: испытания грузом",
     "gallery_cap_2": "Вид спереди: силовой бампер и оптика",
@@ -132,5 +132,5 @@
       "src": "img_web/user_1793795494782_20261023_091846.jpg"
     }
   },
-  "updatedAt": "2026-11-04T12:31:40.969Z"
+  "updatedAt": "2026-11-04T12:45:39.977Z"
 }
