@@ -835,6 +835,16 @@
     btn.disabled = true;
 
     try {
+      // Always merge existing images from GitHub / local content.json so image replacements are never lost
+      try {
+        const freshData = await fetch('https://raw.githubusercontent.com/urasokolik/kvadrus/main/content.json?v=' + Date.now())
+          .then(r => r.ok ? r.json() : null)
+          .catch(() => fetch('content.json?v=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null));
+        if (freshData && freshData.images) {
+          cmsState.images = Object.assign({}, freshData.images, cmsState.images);
+        }
+      } catch (e) {}
+
       // Gather latest texts from all [data-cms]
       document.querySelectorAll('[data-cms]').forEach(el => {
         const key = el.getAttribute('data-cms');
@@ -938,6 +948,13 @@
   // Global trigger setup
   function initTrigger() {
     injectStyles();
+
+    // Sync existing images state so in-memory CMS state is always fresh
+    fetch('content.json?v=' + Date.now())
+      .then(r => r.ok ? r.json() : null)
+      .then(d => {
+        if (d && d.images) cmsState.images = Object.assign({}, d.images, cmsState.images);
+      }).catch(() => {});
 
     // Floating CMS button in bottom-left
     if (!document.getElementById('kvadrus-cms-floating-badge')) {
